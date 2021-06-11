@@ -13,6 +13,17 @@ const User_profile_pic = sequelize.define('user_profile_pic', {
     type:Sequelize.STRING,
     allowNull: false
   },
-  
+  mimetype: {
+    type:Sequelize.STRING,
+    allowNull: false
+  },
+  size: {
+    type:Sequelize.INTEGER,
+    allowNull: false
+  },
+  uploadPath: {
+    type:Sequelize.STRING,
+    allowNull: false
+  }
 });
 module.exports = User_profile_pic;

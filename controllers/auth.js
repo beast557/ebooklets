@@ -2,11 +2,11 @@ const User = require('../models/User');
 const UserRole = require('../models/User_role');
 const UserProfilePic = require('../models/User_profile_pic');
 
-
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const {validationResult } = require('express-validator');
 require('dotenv').config({ path: './config.env' })
+const path = require('path')
 
 exports.login = async(req,res,next) =>{
   const errors = validationResult(req);
@@ -63,7 +63,6 @@ exports.signup = async(req,res,next) =>{
       return  res.status(400).json({ errors: [{ msg: 'Confirmed password didnt match or is empty' }] })
       }
 
-
     try {
     let user = await User.findOne({
         where:{
@@ -89,7 +88,10 @@ exports.signup = async(req,res,next) =>{
         userId:user.id
       })
       await UserProfilePic.create({
-        filename:"default.jpg",
+        filename: "default.jpg",
+        mimetype: "jpg",
+        size: 0,
+        uploadPath: path.join(__dirname, '..','uploads','default.jpg' ),
         userId:user.id
       })
 
@@ -98,7 +100,6 @@ exports.signup = async(req,res,next) =>{
           id: user.id
         }
       };
-      // console.log((process.env.jwtSecret).length)
 
       jwt.sign(
         payload,
