@@ -10,6 +10,9 @@ const categoryRoute = require('./routes/v1/category');
 const userRoute = require('./routes/v1/user');
 const bookRoute = require('./routes/v1/book')
 const commentRoute = require('./routes/v1/comment')
+const replyRoute = require('./routes/v1/reply')
+const adminRoute = require('./routes/v1/admin')
+
 //middlewares
 app.use(fileUpload());
 
@@ -20,6 +23,8 @@ app.use('/api/v1/category', categoryRoute);
 app.use('/api/v1/user', userRoute);
 app.use('/api/v1/book', bookRoute);
 app.use('/api/v1/comment', commentRoute);
+app.use('/api/v1/reply', replyRoute);
+app.use('/api/v1/admin', adminRoute);
 
 
 app.use(function(req, res, next) {

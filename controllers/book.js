@@ -1,8 +1,10 @@
 const Book = require('../models/Book');
+const User = require('../models/User');
 const UserRole = require('../models/User_role')
 const path = require('path')
 const { v4  } = require('uuid');
 const fs = require('fs');
+const { Op } = require("sequelize");
 
 exports.upload_book =  async (req,res,next) =>{
     if (!req.files || Object.keys(req.files).length === 0) {
@@ -75,3 +77,67 @@ exports.delete_book =  async (req,res,next) =>{
         res.status(500).send('Server Error');
     }
 }
+
+exports.show_book_by_pk =  async (req,res,next) =>{
+    const {bookId} = req.params
+    try {
+        let book = await Book.findOne({
+            where:{
+                id:bookId
+            },
+            include:[{
+                model:User,
+                attributes:['id','username']
+            }]
+        })
+        if(book){
+            return res.status(200).send(book)
+        }
+        return  res.status(404).json({ errors: [{ msg: 'No book found ' }] });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+}
+exports.get_books_homepage = async(req,res,next) =>{
+    try {
+        let books = await Book.findAll()
+        if(books){
+            return res.status(200).json(books)
+        }
+        return res.status(404).json({ errors: [{ msg: 'No book found ' }] })
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+}
+
+exports.search_books =  async (req,res,next) =>{
+    try {
+     const {search_word} = req.params
+     let books = await Book.findAll({
+         where:{
+            [Op.or]: [
+            {
+                bookname:{
+                    [Op.like]:`%${search_word}%`
+                }
+
+        },{
+            author:{
+                [Op.like]:`%${search_word}%`
+            }
+        }]
+         }
+     })
+    if(book){
+        return res.status(200).send(books)
+
+    }
+    return res.status(404).json({ errors: [{ msg: 'No book found ' }] })
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }        
+    }
+

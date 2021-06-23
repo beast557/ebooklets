@@ -28,7 +28,6 @@ try{
 }
 
 exports.delete_comment = async (req,res,next) =>{
-    
     const {id} = req.user
     const {commentId} = req.params
 try{
